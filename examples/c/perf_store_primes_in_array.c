@@ -17,7 +17,7 @@ void one_cycle(uint64_t n, uint64_t start)
   /* store the primes below 1000 */
   gettimeofday(&tval_before, NULL);
   
-  int* primes = (int*) primesieve_generate_n_primes(n, start, INT_PRIMES);
+  uint64_t* primes = (uint64_t *) primesieve_generate_n_primes(n, start, UINT64_PRIMES);
   
   gettimeofday(&tval_after, NULL);
   timersub(&tval_after, &tval_before, &tval_result);
