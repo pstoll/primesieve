@@ -9,6 +9,24 @@
 #include <string.h>
 #include <sys/time.h>
 
+void one_cycle_array(uint64_t n, uint64_t start, uint64_t *array, uint64_t len)
+{
+  struct timeval tval_before, tval_after, tval_result;
+
+  if ( len < n) return;
+  
+  printf("generating n primes for n=%llu starting at %llu\n", n, start);
+  /* store the primes below 1000 */
+  gettimeofday(&tval_before, NULL);
+
+  (void)primesieve_generate_n_primes_array(n, start, array, len, UINT64_PRIMES);
+  
+  gettimeofday(&tval_after, NULL);
+  timersub(&tval_after, &tval_before, &tval_result);
+  printf("Time elapsed: %ld.%06ld sec\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
+  
+}
+
 void one_cycle(uint64_t n, uint64_t start)
 {
   struct timeval tval_before, tval_after, tval_result;
@@ -17,7 +35,7 @@ void one_cycle(uint64_t n, uint64_t start)
   /* store the primes below 1000 */
   gettimeofday(&tval_before, NULL);
   
-  int* primes = (int*) primesieve_generate_n_primes(n, start, INT_PRIMES);
+  uint64_t *primes = (uint64_t *) primesieve_generate_n_primes(n, start, UINT64_PRIMES);
   
   gettimeofday(&tval_after, NULL);
   timersub(&tval_after, &tval_before, &tval_result);
@@ -29,7 +47,7 @@ void one_cycle(uint64_t n, uint64_t start)
 
 int main(int argc, char ** argv)
 {
-  uint64_t start = 0;
+  uint64_t start = 0, cur_start;
   uint64_t nn = 1000000000;
   int      repeats = 10;
   int      ii;
@@ -44,14 +62,34 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  printf("comparing (n,start,repeats) = (%llu, %llu, %d)\n", nn, start, repeats);
+  printf("using existing interface for (n,start,repeats) = (%llu, %llu, %d)\n", nn, start, repeats);
 
+  cur_start = start;
   for (ii = 0; ii < repeats; ii++) {
-    one_cycle(nn, start);
-    start += nn;
+    one_cycle(nn, cur_start);
+    cur_start += nn;
   }
   
   one_cycle(nn * repeats, 0);
-  
+
+  printf("using array interface for (n,start,repeats) = (%llu, %llu, %d)\n", nn, start, repeats);
+
+  uint64_t *array;
+  array = malloc( nn * sizeof(uint64_t));
+
+  if (array == NULL) return 1;
+
+  cur_start = start;
+  for (ii = 0; ii < repeats; ii++) {
+    one_cycle_array(nn, cur_start, array, nn);
+    cur_start += nn;
+  }
+  free (array); array = NULL;
+
+  array = malloc( nn * repeats * sizeof(uint64_t));
+  if (array == NULL) return 1;
+
+  one_cycle_array(nn * repeats, 0, array, nn*repeats);
+
   return 0;
 }
