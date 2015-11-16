@@ -1,9 +1,12 @@
-/** @example store_primes_in_array.c
- *  Store primes in a C array. */
+/** @example perf_store_primes_in_array.c
+ *  Store primes in a C array. 
+ *   compare computing N arrays of size SZ vs one array of size (N*SZ)
+*/
 
 #include <primesieve.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/time.h>
 
 void one_cycle(uint64_t n, uint64_t start)
@@ -35,6 +38,10 @@ int main(int argc, char ** argv)
     nn      = strtoull(argv[1], NULL, 10);
     start   = strtoull(argv[2], NULL, 10);
     repeats = atoi(argv[3]);
+  } else {
+    char *s = strrchr(argv[0],'/');
+    printf("usage: %s N-primes START REPEATS\n", s ? s+1: argv[0]);
+    return 1;
   }
 
   printf("comparing (n,start,repeats) = (%llu, %llu, %d)\n", nn, start, repeats);
