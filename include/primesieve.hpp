@@ -24,6 +24,7 @@
 #include <primesieve/cancel_callback.hpp>
 #include <primesieve/iterator.hpp>
 #include <primesieve/PushBackPrimes.hpp>
+#include <primesieve/ArrayPrimes.hpp>
 #include <primesieve/primesieve_error.hpp>
 
 #include <stdint.h>
@@ -91,6 +92,31 @@ namespace primesieve
     }
   }
 
+  /// Store the primes within the interval [start, stop]
+  /// in the primes array.
+  /// @pre N <= LEN
+  ///
+  template <typename T>
+  inline void generate_n_primes_array(uint64_t n, T* primes, uint64_t len)
+  {
+    generate_n_primes_array(n, 0, primes, len);
+  }
+
+  /// Store the primes within the interval [start, stop]
+  /// in the primes array.
+  /// @pre N <= LEN
+  ///
+  template <typename T>
+  inline void generate_n_primes_array(uint64_t n, uint64_t start, T* primes, uint64_t len)
+  {
+    if (primes)
+    {
+      Array_N_Primes<T> ar(primes, len);
+      ar.array_N_Primes(n, start);
+    }
+  }
+
+  
   /// Find the nth prime.
   /// @param n  if n = 0 finds the 1st prime >= start, <br/>
   ///           if n > 0 finds the nth prime > start, <br/>

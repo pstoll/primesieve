@@ -77,6 +77,12 @@ void* primesieve_generate_primes(uint64_t start, uint64_t stop, size_t* size, in
  */
 void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type);
 
+/** Get an array with the first n primes >= start.
+ *  @param type  The type of the primes to generate, e.g. INT_PRIMES.
+ *  @pre stop <= 2^64 - 2^32 * 10.
+ */
+void* primesieve_generate_n_primes_array(uint64_t n, uint64_t start, void *array, uint64_t len, int type);
+
 /** Find the nth prime.
  *  @param n  if n = 0 finds the 1st prime >= start, <br/>
  *            if n > 0 finds the nth prime > start, <br/>

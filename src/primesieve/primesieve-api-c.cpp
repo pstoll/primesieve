@@ -94,6 +94,25 @@ void* generate_n_primes_helper(uint64_t n, uint64_t start, int type)
   return NULL;
 }
 
+///
+template <typename T>
+void* generate_n_primes_array_helper(uint64_t n, uint64_t start, T* array, uint64_t len)
+{
+#if __cplusplus >= 201103L
+  static_assert(BUFFER_BYTES % sizeof(T) == 0, "Prime type sizeof must be a power of 2.");
+#endif
+  try
+  {
+    primesieve::generate_n_primes_array(n, start, array, len);
+    return array;
+  }
+  catch (std::exception&)
+  {
+    errno = EDOM;
+  }
+  return NULL;
+}
+  
 } // namespace
 
 /// All C API functions declared in primesieve.h
@@ -153,6 +172,29 @@ void* primesieve_generate_n_primes(uint64_t n, uint64_t start, int type)
   return NULL;
 }
 
+void* primesieve_generate_n_primes_array(uint64_t n, uint64_t start, void *array, uint64_t len, int type )
+{
+  switch (type)
+  {
+    case SHORT_PRIMES:     return generate_n_primes_array_helper<short>(n, start, reinterpret_cast<short *>(array), len);
+    case USHORT_PRIMES:    return generate_n_primes_array_helper<unsigned short>(n, start, reinterpret_cast<unsigned short *>(array), len);
+    case INT_PRIMES:       return generate_n_primes_array_helper<int>(n, start, reinterpret_cast<int *>(array), len);
+    case UINT_PRIMES:      return generate_n_primes_array_helper<unsigned int>(n, start, reinterpret_cast<unsigned int *>(array), len);
+    case LONG_PRIMES:      return generate_n_primes_array_helper<long>(n, start, reinterpret_cast<long *>(array), len);
+    case ULONG_PRIMES:     return generate_n_primes_array_helper<unsigned long>(n, start, reinterpret_cast<unsigned long *>(array), len);
+    case LONGLONG_PRIMES:  return generate_n_primes_array_helper<long long>(n, start, reinterpret_cast<long long *>(array), len);
+    case ULONGLONG_PRIMES: return generate_n_primes_array_helper<unsigned long long>(n, start, reinterpret_cast<unsigned long long *>(array), len);
+    case INT16_PRIMES:     return generate_n_primes_array_helper<int16_t>(n, start, reinterpret_cast<int16_t *>(array), len);
+    case UINT16_PRIMES:    return generate_n_primes_array_helper<uint16_t>(n, start, reinterpret_cast<uint16_t *>(array), len);
+    case INT32_PRIMES:     return generate_n_primes_array_helper<int32_t>(n, start, reinterpret_cast<int32_t *>(array), len);
+    case UINT32_PRIMES:    return generate_n_primes_array_helper<uint32_t>(n, start, reinterpret_cast<uint32_t *>(array), len);
+    case INT64_PRIMES:     return generate_n_primes_array_helper<int64_t>(n, start, reinterpret_cast<int64_t *>(array), len);
+    case UINT64_PRIMES:    return generate_n_primes_array_helper<uint64_t>(n, start, reinterpret_cast<uint64_t *>(array), len);
+  }
+  errno = EDOM;
+  return NULL;
+}
+  
 void primesieve_free(void* primes_c)
 {
   if (primes_c)
