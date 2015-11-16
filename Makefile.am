@@ -66,6 +66,10 @@ nth_prime_c_SOURCES = examples/c/nth_prime.c
 noinst_PROGRAMS += store_primes_in_array_c
 store_primes_in_array_c_LDADD = libprimesieve.la
 store_primes_in_array_c_SOURCES = examples/c/store_primes_in_array.c
+
+noinst_PROGRAMS += perf_store_primes_in_array_c
+perf_store_primes_in_array_c_LDADD = libprimesieve.la
+perf_store_primes_in_array_c_SOURCES = examples/c/perf_store_primes_in_array.c
 endif
 
 # Additional files to be deleted by 'make distclean'
