@@ -21,7 +21,7 @@ void one_cycle(uint64_t n, uint64_t start)
   
   gettimeofday(&tval_after, NULL);
   timersub(&tval_after, &tval_before, &tval_result);
-  printf("Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
+  printf("Time elapsed: %ld.%06ld sec\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
   
   primesieve_free(primes);
 
